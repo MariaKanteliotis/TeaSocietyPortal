@@ -1,56 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-<meta charset="UTF-8">
-<title>Tea Society Club Portal</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tea Society Club Portal</title>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+   <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">Tea Society</a>
 
-<a class="navbar-brand" href="#">Tea Society</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-<div class="collapse navbar-collapse">
-<ul class="navbar-nav ms-auto">
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="signup.html">Member Registration</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-<li class="nav-item">
-<a class="nav-link active" href="index.html">Home</a>
-</li>
+    <header class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold">Welcome to the Tea Society</h1>
+            <p class="lead mt-3">
+                A student club for tea lovers, conversation, and community.
+            </p>
+            <p>
+                Join us for tastings, social events, and opportunities to learn about teas
+                from different cultures around the world.
+            </p>
+            <a href="signup.html" class="btn btn-success btn-lg mt-3">Become a Member</a>
+        </div>
+    </header>
 
-<li class="nav-item">
-<a class="nav-link" href="members.html">Member Registration</a>
-</li>
+    <section class="container my-5">
+        <div class="text-center mb-5">
+            <h2>What We Do</h2>
+            <p class="section-text">Tea Society brings students together through fun and relaxing club activities.</p>
+        </div>
 
-</ul>
-</div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 custom-card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Tea Tastings</h5>
+                        <p class="card-text">
+                            Explore green tea, black tea, herbal tea, and international blends with other members.
+                        </p>
+                    </div>
+                </div>
+            </div>
 
-</div>
-</nav>
+            <div class="col-md-4">
+                <div class="card h-100 custom-card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Social Events</h5>
+                        <p class="card-text">
+                            Meet new people, share stories, and enjoy a welcoming environment on campus.
+                        </p>
+                    </div>
+                </div>
+            </div>
 
-<div class="container text-center mt-5">
+            <div class="col-md-4">
+                <div class="card h-100 custom-card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Tea Education</h5>
+                        <p class="card-text">
+                            Learn about tea traditions, preparation methods, and the cultural history behind them.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<h1>Welcome to the Tea Society!</h1>
+    <section class="container my-5">
+        <div class="row align-items-center g-4">
+            <div class="col-md-6">
+                <h2>Why Join Tea Society?</h2>
+                <p>
+                    Tea Society is a place for students who want to relax, meet others, and explore different tea cultures.
+                    Whether you are already a tea enthusiast or just curious, everyone is welcome.
+                </p>
+                <p>
+                    Members can participate in club events, make new friends, and become part of a positive campus community.
+                </p>
+            </div>
 
-<p class="lead">
-The Tea Society is a student club dedicated to hosting tea tastings, talking about the "tea" 
-    and bringing students together over a shared love of different kinds of tea.
-</p>
+            <div class="col-md-6">
+                <div class="info-box">
+                    <h4 class="mb-3">Club Highlights</h4>
+                    <ul>
+                        <li>Weekly tea meetups</li>
+                        <li>Seasonal tasting events</li>
+                        <li>Student networking and socializing</li>
+                        <li>Open to all experience levels</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<p>
-Join our community to attend events, meet fellow tea enthusiasts,
-and learn about teas from around the world.
-</p>
+    <section class="container my-5 text-center">
+        <div class="join-section">
+            <h2>Ready to Join?</h2>
+            <p>
+                Register as a Tea Society member and become part of our growing club community.
+            </p>
+            <a href="signup.html" class="btn btn-success btn-lg mt-2">Go to Member Registration</a>
+        </div>
+    </section>
 
-<a href="members.html" class="btn btn-success mt-3">
-Become a Member
-</a>
+    <footer class="text-center py-3 custom-footer">
+        <p class="mb-0">&copy; 2026 Tea Society Club Portal | IST 256 Group Project</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
 
 </div>
 
