@@ -215,6 +215,3 @@ function initializeApp() {
 }
 
 document.addEventListener("DOMContentLoaded", initializeApp);
-
-
-document.addEventListener("DOMContentLoaded", initializeApp);
