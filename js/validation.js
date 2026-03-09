@@ -99,8 +99,12 @@ function getFormData(form) {
 
 function savaFormDataToLocalStorage(formData) {
     try {
-        const userJSON = JSON.stringify(formData);
-        localStorage.setItem(STORAGE_KEY, userJSON);
+        const existingUsers = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+        existingUsers.push(formData);
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(existingUsers));
+
         console.log('Saved successfully!');
         return true;
     }
@@ -108,7 +112,6 @@ function savaFormDataToLocalStorage(formData) {
         console.log('Error saving to local storage:', error);
         return false;
     }
-    
 }
 
 function displayUserCard(userData) {
