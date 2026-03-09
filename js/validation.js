@@ -93,7 +93,6 @@ function getFormData(form) {
     };
 }
 
-// ---------- Minimal change here: save multiple users ----------
 function saveFormDataToLocalStorage(formData) {
     try {
         const existingUsers = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
@@ -111,7 +110,6 @@ function saveFormDataToLocalStorage(formData) {
     }
 }
 
-// ---------- Display all users ----------
 function displayAllUserCards(users) {
     const userCardContainer = document.getElementById('userCard');
     userCardContainer.innerHTML = "";
@@ -130,7 +128,6 @@ function displayAllUserCards(users) {
     });
 }
 
-// ---------- Download JSON ----------
 function downloadUsersJSON() {
     const users = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
     if (users.length === 0) {
