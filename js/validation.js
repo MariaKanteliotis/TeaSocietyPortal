@@ -17,7 +17,6 @@ function updateField(formField, errorElement, isValid, errorMessage) {
     }
 }
 
-
 function validateField(formField) {
     const fieldId = formField.id;
     const value = formField.value.trim();
@@ -25,8 +24,6 @@ function validateField(formField) {
 
     let isValid = true;
     let errorMessage = "";
-
-
 
     if (formField.hasAttribute('required') && value === ''){
         isValid = false;
@@ -39,7 +36,7 @@ function validateField(formField) {
             case 'lastName':
                 if (value.length < 2) {
                     isValid = false;
-                    errorMessage = 'Name must be atleast 2 characters';
+                    errorMessage = 'Name must be at least 2 characters';
                 }
                 break;
 
@@ -59,7 +56,6 @@ function validateField(formField) {
 }
 
 function validateForm(form) {
-    // const form = document.getElementById("signupForm");
     let isValid = true;
 
     const formInputs = form.querySelectorAll('input, select');
@@ -97,7 +93,8 @@ function getFormData(form) {
     };
 }
 
-function savaFormDataToLocalStorage(formData) {
+// ---------- Minimal change here: save multiple users ----------
+function saveFormDataToLocalStorage(formData) {
     try {
         const existingUsers = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 
@@ -114,22 +111,39 @@ function savaFormDataToLocalStorage(formData) {
     }
 }
 
-function displayUserCard(userData) {
+// ---------- Display all users ----------
+function displayAllUserCards(users) {
     const userCardContainer = document.getElementById('userCard');
-    console.log(userCardContainer)
+    userCardContainer.innerHTML = "";
 
-    let cardHtml = `
-        <div class="card">
-            <div>
-                <h5>${userData.firstName} ${userData.lastName}</h5>
-                <p class="card-text">Email: ${userData.email}</p>
-                <p class="card-text">Address: ${userData.address.street}, ${userData.address.city}, ${userData.address.state} ${userData.address.zip}</p>
-                <button class="btn btn-danger">Delete User</button>
+    users.forEach(userData => {
+        let cardHtml = `
+            <div class="card mb-2">
+                <div>
+                    <h5>${userData.firstName} ${userData.lastName}</h5>
+                    <p class="card-text">Email: ${userData.email}</p>
+                    <p class="card-text">Address: ${userData.address.street}, ${userData.address.city}, ${userData.address.state} ${userData.address.zip}</p>
+                </div>
             </div>
-        </div>
-    `;
+        `;
+        userCardContainer.innerHTML += cardHtml;
+    });
+}
 
-    userCardContainer.innerHTML = cardHtml;
+// ---------- Download JSON ----------
+function downloadUsersJSON() {
+    const users = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    if (users.length === 0) {
+        alert("No users to download!");
+        return;
+    }
+    const blob = new Blob([JSON.stringify(users, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "users.json";
+    a.click();
+    URL.revokeObjectURL(url);
 }
 
 function handleSignupSubmit(event) {
@@ -137,27 +151,29 @@ function handleSignupSubmit(event) {
 
     const form = document.getElementById("signupForm");
 
-    if(!validateForm(form)) {
-        // window.alert('Form is not valid');
-        return;
-    }
+    if(!validateForm(form)) return;
 
     const formData = getFormData(form);
 
-    if(savaFormDataToLocalStorage(formData)) {
+    if(saveFormDataToLocalStorage(formData)) {
         window.alert('You successfully signed up!');
-    }
-    else {
+    } else {
         window.alert('Sign up failed!!');
     }
 
-    displayUserCard(formData);
+    // Load all users and display
+    const users = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    displayAllUserCards(users);
 }
 
-function initilizeApp() {
+function initializeApp() {
     console.log('Setting Everything');
 
     document.getElementById('signupForm').addEventListener('submit', handleSignupSubmit);
+
+    // Load users on page load
+    const users = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    displayAllUserCards(users);
 }
 
-document.addEventListener('DOMContentLoaded', initilizeApp);
+document.addEventListener('DOMContentLoaded', initializeApp);
