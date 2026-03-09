@@ -129,7 +129,7 @@ function displayAllUserCards(users) {
 }
 
 function downloadUsersJSON() {
-    const users = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    const users = JSON.parse(localStorage.getItem('storefront_user')) || [];
     if (users.length === 0) {
         alert("No users to download!");
         return;
