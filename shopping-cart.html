@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tea Society Storefront</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        .hidden-section {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">Tea Society</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="signup.html">Member Registration</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="content-management.html">Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="shopping-cart.html">Storefront</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero-section small-hero">
+        <div class="container text-center">
+            <h1 class="fw-bold">Tea Society Storefront</h1>
+            <p class="lead mt-3">Browse, search, and manage products for the Tea Society store.</p>
+        </div>
+    </header>
+
+    <main class="container my-5">
+
+        <!-- SEARCH -->
+        <div class="card custom-card p-4 mb-5">
+            <h2>Search Products</h2>
+            <p class="mb-3">Search for items by product name, category, or product ID.</p>
+            <input type="text" id="searchInput" class="form-control" placeholder="Search products...">
+        </div>
+
+        <!-- PRODUCT FORM -->
+        <div class="card custom-card p-4 mb-5">
+            <h2>Add or Update Product</h2>
+            <p class="mb-4">Enter product details below. Required fields match the project instructions.</p>
+
+            <form id="productForm" novalidate>
+                <div class="row g-3">
+
+                    <div class="col-md-4">
+                        <label for="productId" class="form-label">Product ID <span class="text-danger">*</span></label>
+                        <input type="text" id="productId" class="form-control" placeholder="TS103" required>
+                    </div>
+
+                    <div class="col-md-8">
+                        <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
+                        <input type="text" id="description" class="form-control" placeholder="Enter product description" required>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="category" class="form-label">Category <span class="text-danger">*</span></label>
+                        <select id="category" class="form-select" required>
+                            <option value="">Choose...</option>
+                            <option>Tea Kit</option>
+                            <option>Merchandise</option>
+                            <option>Event Material</option>
+                            <option>Tea Tool</option>
+                            <option>Club Supplies</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="unit" class="form-label">Unit of Measure <span class="text-danger">*</span></label>
+                        <select id="unit" class="form-select" required>
+                            <option value="">Choose...</option>
+                            <option>Each</option>
+                            <option>Box</option>
+                            <option>Set</option>
+                            <option>Ticket</option>
+                            <option>Bag</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="price" class="form-label">Price <span class="text-danger">*</span></label>
+                        <input type="number" id="price" class="form-control" placeholder="0.00" min="0" step="0.01" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="weight" class="form-label">Weight</label>
+                        <input type="text" id="weight" class="form-control" placeholder="Optional weight">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="color" class="form-label">Color</label>
+                        <input type="text" id="color" class="form-control" placeholder="Optional color">
+                    </div>
+
+                    <div class="col-12 mt-3">
+                        <button type="submit" class="btn btn-success me-2">Save Product</button>
+                        <button type="reset" class="btn btn-secondary">Clear Form</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- PRODUCTS TABLE -->
+        <div class="card custom-card p-4 mb-5">
+            <h2>Available Products</h2>
+            <p class="mb-3">These items can be searched and added to the shopping cart.</p>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Product ID</th>
+                            <th>Description</th>
+                            <th>Category</th>
+                            <th>Unit</th>
+                            <th>Price</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productTable">
+                        <tr>
+                            <td>TS101</td>
+                            <td>Starter Tea Sampler Box</td>
+                            <td>Tea Kit</td>
+                            <td>Box</td>
+                            <td>$18.00</td>
+                            <td><button class="btn btn-success btn-sm" type="button">Add</button></td>
+                        </tr>
+                        <tr>
+                            <td>TS102</td>
+                            <td>Ceramic Mug</td>
+                            <td>Merchandise</td>
+                            <td>Each</td>
+                            <td>$12.50</td>
+                            <td><button class="btn btn-success btn-sm" type="button">Add</button></td>
+                        </tr>
+                        <tr>
+                            <td>TS103</td>
+                            <td>Spring Tasting Ticket</td>
+                            <td>Event Material</td>
+                            <td>Ticket</td>
+                            <td>$10.00</td>
+                            <td><button class="btn btn-success btn-sm" type="button">Add</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- CART -->
+        <div class="card custom-card p-4 mb-5">
+            <h2>Shopping Cart</h2>
+            <p class="mb-3">Selected products will appear here and can be removed from the cart.</p>
+
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Product ID</th>
+                            <th>Description</th>
+                            <th>Category</th>
+                            <th>Unit</th>
+                            <th>Price</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cartTable">
+                        <tr>
+                            <td colspan="6" class="text-center">Cart is empty</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- HIDDEN SECTION FOR JSON AND AJAX -->
+        <div class="hidden-section">
+
+            <div class="card custom-card p-4 mb-4">
+                <h2>JSON Product Preview</h2>
+                <pre id="jsonPreview">
+{
+  "productId": "TS101",
+  "description": "Starter Tea Sampler Box",
+  "category": "Tea Kit",
+  "unitOfMeasure": "Box",
+  "price": 18.00,
+  "weight": "1.2 lb",
+  "color": "Green"
+}
+                </pre>
+            </div>
+
+            <div class="card custom-card p-4 mb-4">
+                <h2>AJAX Transport Area</h2>
+                <button class="btn btn-success" type="button">Send JSON to API</button>
+                <p class="mt-3 mb-0">Ready to transport product data.</p>
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer class="text-center py-3 custom-footer">
+        <p class="mb-0">&copy; 2026 Tea Society | IST 256 Group Project</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
