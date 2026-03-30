@@ -2,15 +2,18 @@ let products = [];
 let cart = [];
 
 function loadProductsFromTable() {
-    $("#productTable tr").each(function () {
+    $("#productTable").on("click", "button", function (){
+        let row = $(this).closest("tr");
+        
         let product = {
-            productId: $(this).find("td:eq(0)").text(),
-            description: $(this).find("td:eq(1)").text(),
-            category: $(this).find("td:eq(2)").text(),
-            unit: $(this).find("td:eq(3)").text(),
-            price: parseFloat($(this).find("td:eq(4)").text().replace("$", ""))
+            productId: row.find("td:eq(0)").text(),
+            description: row.find("td:eq(1)").text(),
+            category: row.find("td:eq(2)").text(),
+            unit: row.find("td:eq(3)").text(),
+            price: parseFloat(row.find("td:eq(4)").text().replace("$", ""))
         };
-        products.push(product);
+        cart.push(product);
+        displayCart();
     });
 }
 
