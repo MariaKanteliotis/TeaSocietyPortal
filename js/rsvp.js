@@ -39,15 +39,17 @@ $("#rsvpForm").submit(function (e) {
 
 function sendRSVP(data) {
     $.ajax({
-        url: "https://example.com/api/rsvp", //
+        url: "https://jsonplaceholder.typicode.com/posts",
         method: "POST",
         data: JSON.stringify(data),
         contentType: "application/json",
-        success: function () {
-            console.log("Data sent successfully!");
+        success: function (response) {
+            console.log("Data sent successfully!", response);
+            alert("Data successfully sent to server!");
         },
         error: function () {
             console.log("Error sending data.");
+            alert("Error sending data.");
         }
     });
 }
