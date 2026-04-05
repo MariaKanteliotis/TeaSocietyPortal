@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tea Society Finalization</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        .hidden-section {
+            display: none;
+        }
+
+        .summary-box {
+            background: #f8fbf8;
+            border: 1px solid #d8e7d8;
+            border-radius: 14px;
+            padding: 18px;
+        }
+
+        pre {
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="index.html">Tea Society</a>
+
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="signup.html">Member Registration</a></li>
+                <li class="nav-item"><a class="nav-link" href="content-management.html">Events</a></li>
+                <li class="nav-item"><a class="nav-link" href="shopping-cart.html">Storefront</a></li>
+                <li class="nav-item"><a class="nav-link active" href="finalization.html">Finalization</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero-section small-hero">
+    <div class="container text-center">
+        <h1 class="fw-bold">Event Finalization</h1>
+        <p class="lead">Confirm your Tea Society event details!</p>
+    </div>
+</header>
+
+<main class="container my-5">
+
+    <!-- FORM -->
+    <div class="card custom-card p-4 mb-5">
+        <h2>Finalization Form</h2>
+
+        <form id="finalizationForm">
+
+            <div class="mb-3">
+                <label>Full Name *</label>
+                <input type="text" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label>Email *</label>
+                <input type="email" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label>Select Event *</label>
+                <select class="form-select" required>
+                    <option value="">Choose...</option>
+                    <option>Spring Tea Tasting</option>
+                    <option>Matcha Workshop</option>
+                    <option>Tea Social</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label>Participation Type *</label>
+                <select class="form-select" required>
+                    <option value="">Choose...</option>
+                    <option>In-Person</option>
+                    <option>Virtual</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label>Comments</label>
+                <textarea class="form-control"></textarea>
+            </div>
+
+            <button class="btn btn-success">Submit</button>
+
+        </form>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="card custom-card p-4 mb-4">
+        <h2>Summary</h2>
+        <div class="summary-box">
+            <p><strong>Name:</strong> Not submitted</p>
+            <p><strong>Email:</strong> Not submitted</p>
+        </div>
+    </div>
+
+    <!-- HIDDEN DEV SECTIONS -->
+    <!-- Hidden for grading: JSON, AJAX, and React integration -->
+    <div class="hidden-section">
+
+        <!-- JSON -->
+        <div class="card custom-card p-4 mb-5">
+            <h2>JSON Preview Area</h2>
+            <pre>
+{
+  "fullName": "Taylor Morgan",
+  "email": "taylor@psu.edu"
+}
+            </pre>
+        </div>
+
+        <!-- AJAX -->
+        <div class="card custom-card p-4 mb-5">
+            <h2>AJAX Transport Area</h2>
+            <input type="text" class="form-control mb-3" value="https://example.com/api/finalizations">
+            <button class="btn btn-success">Send JSON to API</button>
+            <p class="mt-2"><strong>Status:</strong> Ready</p>
+        </div>
+
+        <!-- REACT -->
+        <div class="card custom-card p-4 mb-5">
+            <h2>React / AngularJS Integration Area</h2>
+            <div class="summary-box">React component will be mounted here</div>
+        </div>
+
+    </div>
+
+</main>
+
+</body>
+</html>
