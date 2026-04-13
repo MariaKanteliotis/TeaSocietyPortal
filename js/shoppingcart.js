@@ -1,6 +1,65 @@
 let products = [];
 let cart = [];
 
+/* ---------------------------
+   JSON STORAGE FUNCTIONS
+---------------------------- */
+
+function saveProductsToStorage() {
+    localStorage.setItem("products", JSON.stringify(products));
+}
+
+function loadProductsFromStorage() {
+    let stored = localStorage.getItem("products");
+    if (stored) products = JSON.parse(stored);
+}
+
+function saveCartToStorage() {
+    localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+function loadCartFromStorage() {
+    let stored = localStorage.getItem("cart");
+    if (stored) {
+        cart = JSON.parse(stored);
+        displayCart();
+    }
+}
+
+/* ---------------------------
+   EXPORT JSON FUNCTIONS
+---------------------------- */
+
+function exportProductsJSON() {
+    const dataStr = JSON.stringify(products, null, 2);
+    const blob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "products.json";
+    a.click();
+
+    URL.revokeObjectURL(url);
+}
+
+function exportCartJSON() {
+    const dataStr = JSON.stringify(cart, null, 2);
+    const blob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "cart.json";
+    a.click();
+
+    URL.revokeObjectURL(url);
+}
+
+/* ---------------------------
+   PRODUCT + CART FUNCTIONS
+---------------------------- */
+
 function loadProductsFromTable() {
     $("#productTable tr").each(function () {
         let product = {
@@ -43,11 +102,13 @@ function displayCart() {
 
 function addToCart(index) {
     cart.push(products[index]);
+    saveCartToStorage();
     displayCart();
 }
 
 function removeFromCart(index) {
     cart.splice(index, 1);
+    saveCartToStorage();
     displayCart();
 }
 
@@ -59,6 +120,10 @@ function attachAddButtons() {
     });
 }
 
+/* ---------------------------
+   SEARCH FILTER
+---------------------------- */
+
 $("#searchInput").on("keyup", function () {
     let value = $(this).val().toLowerCase();
 
@@ -66,6 +131,10 @@ $("#searchInput").on("keyup", function () {
         $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
     });
 });
+
+/* ---------------------------
+   ADD PRODUCT FORM
+---------------------------- */
 
 $("#productForm").submit(function (e) {
     e.preventDefault();
@@ -99,6 +168,7 @@ $("#productForm").submit(function (e) {
     };
 
     products.push(newProduct);
+    saveProductsToStorage();
 
     $("#productTable").append(`
         <tr>
@@ -110,7 +180,7 @@ $("#productForm").submit(function (e) {
             <td><button class="btn btn-success btn-sm">Add</button></td>
         </tr>
     `);
-  
+
     attachAddButtons();
 
     $("#jsonPreview").text(JSON.stringify(newProduct, null, 2));
@@ -119,6 +189,10 @@ $("#productForm").submit(function (e) {
 
     this.reset();
 });
+
+/* ---------------------------
+   SEND CART TO API
+---------------------------- */
 
 function sendCartData() {
     $.ajax({
@@ -139,7 +213,18 @@ $(".hidden-section button").click(function () {
     sendCartData();
 });
 
+/* ---------------------------
+   INITIALIZATION
+---------------------------- */
+
 $(document).ready(function () {
-    loadProductsFromTable();
+    loadProductsFromStorage();
+    loadCartFromStorage();
+
+    if (products.length === 0) {
+        loadProductsFromTable();
+        saveProductsToStorage();
+    }
+
     attachAddButtons();
 });
