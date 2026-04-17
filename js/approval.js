@@ -59,6 +59,7 @@ function updateStatus(id, status) {
             alert("Error updating status.");
         }
     });
+}
     function downloadUsersJSON() {
     const users = JSON.parse(localStorage.getItem('storefront_user')) || [];
     if (users.length === 0) {
@@ -72,5 +73,4 @@ function updateStatus(id, status) {
     a.download = "users.json";
     a.click();
     URL.revokeObjectURL(url);
-}
 }
