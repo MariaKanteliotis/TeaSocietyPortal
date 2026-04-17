@@ -59,4 +59,18 @@ function updateStatus(id, status) {
             alert("Error updating status.");
         }
     });
+    function downloadUsersJSON() {
+    const users = JSON.parse(localStorage.getItem('storefront_user')) || [];
+    if (users.length === 0) {
+        alert("No users to download!");
+        return;
+    }
+    const blob = new Blob([JSON.stringify(users, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "users.json";
+    a.click();
+    URL.revokeObjectURL(url);
+}
 }
