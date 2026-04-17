@@ -1,243 +1,294 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tea Society Storefront</title>
+let products = [];
+let cart = [];
+let editingIndex = -1; // Track if we're editing
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+/* ---------------------------
+   JSON STORAGE FUNCTIONS
+---------------------------- */
 
-    <style>
-        .hidden-section {
-            display: none;
-        }
-    </style>
-</head>
-<body>
-
-    <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="index.html">Tea Society</a>
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="mainNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="signup.html">Member Registration</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="content-management.html">Events</a>
-                    </li>
-                    <li class="nav-item">
-                <a class="nav-link" href="shopping-cart.html">Storefront</a>
-                </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <header class="hero-section small-hero">
-        <div class="container text-center">
-            <img src="https://cdn.pixabay.com/photo/2020/04/01/17/02/cup-4991876_1280.png"  alt="tea bags" style="float:left;width:150px;height:100px;"/>
-            <img src="https://png.pngtree.com/png-vector/20230728/ourmid/pngtree-sweater-clipart-cartoon-pattern-of-a-sweater-with-blue-color-vector-png-image_6819091.png"  alt="sweater" style="float:right;padding-bottom:50px;width:200px;height:200px;"/>
-            <h1 class="fw-bold">Tea Society Storefront</h1>
-            <p class="lead mt-3">Browse, search, and manage products for the Tea Society store.</p>
-        </div>
-    </header>
-
-    <main class="container my-5">
-
-        <!-- SEARCH -->
-        <div class="card custom-card p-4 mb-5">
-            <h2>Search Products</h2>
-            <p class="mb-3">Search for items by product name, category, or product ID.</p>
-            <input type="text" id="searchInput" class="form-control" placeholder="Search products...">
-        </div>
-
-        <!-- PRODUCT FORM -->
-        <div class="card custom-card p-4 mb-5">
-            <h2>Add or Update Product</h2>
-            <p class="mb-4">Enter product details below. Required fields match the project instructions.</p>
-
-            <form id="productForm" novalidate>
-                <div class="row g-3">
-
-                    <div class="col-md-4">
-                        <label for="productId" class="form-label">Product ID <span class="text-danger">*</span></label>
-                        <input type="text" id="productId" class="form-control" placeholder="TS103" required>
-                    </div>
-
-                    <div class="col-md-8">
-                        <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
-                        <input type="text" id="description" class="form-control" placeholder="Enter product description" required>
-                    </div>
-
-                    <div class="col-md-4">
-                        <label for="category" class="form-label">Category <span class="text-danger">*</span></label>
-                        <select id="category" class="form-select" required>
-                            <option value="">Choose...</option>
-                            <option>Tea Kit</option>
-                            <option>Merchandise</option>
-                            <option>Event Material</option>
-                            <option>Tea Tool</option>
-                            <option>Club Supplies</option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-4">
-                        <label for="unit" class="form-label">Unit of Measure <span class="text-danger">*</span></label>
-                        <select id="unit" class="form-select" required>
-                            <option value="">Choose...</option>
-                            <option>Each</option>
-                            <option>Box</option>
-                            <option>Set</option>
-                            <option>Ticket</option>
-                            <option>Bag</option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-4">
-                        <label for="price" class="form-label">Price <span class="text-danger">*</span></label>
-                        <input type="number" id="price" class="form-control" placeholder="0.00" min="0" step="0.01" required>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label for="weight" class="form-label">Weight</label>
-                        <input type="text" id="weight" class="form-control" placeholder="Optional weight">
-                    </div>
-
-                    <div class="col-md-6">
-                        <label for="color" class="form-label">Color</label>
-                        <input type="text" id="color" class="form-control" placeholder="Optional color">
-                    </div>
-
-                    <div class="col-12 mt-3">
-                        <button type="submit" class="btn btn-success me-2">Save Product</button>
-                        <button type="reset" class="btn btn-secondary">Clear Form</button>
-                        <button class="btn btn-success mb-3" id="downloadBtn">
-    Download Users JSON
-</button>
-
-<div id="userCard"></div>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <!-- PRODUCTS TABLE -->
-        <div class="card custom-card p-4 mb-5">
-            <h2>Available Products</h2>
-            <p class="mb-3">These items can be searched and added to the shopping cart.</p>
-
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>Product ID</th>
-                            <th>Description</th>
-                            <th>Category</th>
-                            <th>Unit</th>
-                            <th>Price</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="productTable">
-                        <tr>
-                            <td>TS101</td>
-                            <td>Starter Tea Sampler Box</td>
-                            <td>Tea Kit</td>
-                            <td>Box</td>
-                            <td>$18.00</td>
-                            <td><button class="btn btn-success btn-sm" type="button">Add</button></td>
-                        </tr>
-                        <tr>
-                            <td>TS102</td>
-                            <td>Ceramic Mug</td>
-                            <td>Merchandise</td>
-                            <td>Each</td>
-                            <td>$12.50</td>
-                            <td><button class="btn btn-success btn-sm" type="button">Add</button></td>
-                        </tr>
-                        <tr>
-                            <td>TS103</td>
-                            <td>Spring Tasting Ticket</td>
-                            <td>Event Material</td>
-                            <td>Ticket</td>
-                            <td>$10.00</td>
-                            <td><button class="btn btn-success btn-sm" type="button">Add</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- CART -->
-        <div class="card custom-card p-4 mb-5">
-            <h2>Shopping Cart</h2>
-            <p class="mb-3">Selected products will appear here and can be removed from the cart.</p>
-
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Product ID</th>
-                            <th>Description</th>
-                            <th>Category</th>
-                            <th>Unit</th>
-                            <th>Price</th>
-                            <th>Remove</th>
-                        </tr>
-                    </thead>
-                    <tbody id="cartTable">
-                        <tr>
-                            <td colspan="6" class="text-center">Cart is empty</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- HIDDEN SECTION FOR JSON AND AJAX -->
-        <div class="hidden-section">
-
-            <div class="card custom-card p-4 mb-4">
-                <h2>JSON Product Preview</h2>
-                <pre id="jsonPreview">
-{
-  "productId": "TS101",
-  "description": "Starter Tea Sampler Box",
-  "category": "Tea Kit",
-  "unitOfMeasure": "Box",
-  "price": 18.00,
-  "weight": "1.2 lb",
-  "color": "Green"
+function saveProductsToStorage() {
+    localStorage.setItem("products", JSON.stringify(products));
 }
-                </pre>
-            </div>
 
-            <div class="card custom-card p-4 mb-4">
-                <h2>AJAX Transport Area</h2>
-                <button class="btn btn-success" type="button">Send JSON to API</button>
-                <p class="mt-3 mb-0">Ready to transport product data.</p>
-            </div>
+function loadProductsFromStorage() {
+    let stored = localStorage.getItem("products");
+    if (stored) products = JSON.parse(stored);
+}
 
-        </div>
+function saveCartToStorage() {
+    localStorage.setItem("cart", JSON.stringify(cart));
+}
 
-    </main>
+function loadCartFromStorage() {
+    let stored = localStorage.getItem("cart");
+    if (stored) {
+        cart = JSON.parse(stored);
+        displayCart();
+    }
+}
 
-    <footer class="text-center py-3 custom-footer">
-        <p class="mb-0">&copy; 2026 Tea Society | IST 256 Group Project</p>
-    </footer>
+/* ---------------------------
+   EXPORT JSON FUNCTIONS
+---------------------------- */
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="shoppingcart.js"></script>
-</body>
-</html>
+function exportProductsJSON() {
+    const dataStr = JSON.stringify(products, null, 2);
+    const blob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "products.json";
+    a.click();
+
+    URL.revokeObjectURL(url);
+}
+
+function exportCartJSON() {
+    const dataStr = JSON.stringify(cart, null, 2);
+    const blob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "cart.json";
+    a.click();
+
+    URL.revokeObjectURL(url);
+}
+
+/* ---------------------------
+   PRODUCT + CART FUNCTIONS
+---------------------------- */
+
+function loadProductsFromTable() {
+    $("#productTable tr").each(function () {
+        let product = {
+            productId: $(this).find("td:eq(0)").text(),
+            description: $(this).find("td:eq(1)").text(),
+            category: $(this).find("td:eq(2)").text(),
+            unit: $(this).find("td:eq(3)").text(),
+            price: parseFloat($(this).find("td:eq(4)").text().replace("$", ""))
+        };
+        products.push(product);
+    });
+}
+
+function displayCart() {
+    let output = "";
+
+    if (cart.length === 0) {
+        output = `<tr><td colspan="6" class="text-center">Cart is empty</td></tr>`;
+    } else {
+        cart.forEach((item, index) => {
+            output += `
+                <tr>
+                    <td>${item.productId}</td>
+                    <td>${item.description}</td>
+                    <td>${item.category}</td>
+                    <td>${item.unit}</td>
+                    <td>$${item.price.toFixed(2)}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="removeFromCart(${index})">
+                            Remove
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    $("#cartTable").html(output);
+}
+
+function addToCart(index) {
+    cart.push(products[index]);
+    saveCartToStorage();
+    displayCart();
+}
+
+function removeFromCart(index) {
+    cart.splice(index, 1);
+    saveCartToStorage();
+    displayCart();
+}
+
+// NEW: Edit product from table
+function editProduct(index) {
+    let product = products[index];
+    $("#productId").val(product.productId);
+    $("#description").val(product.description);
+    $("#category").val(product.category);
+    $("#unit").val(product.unit);
+    $("#price").val(product.price);
+    $("#weight").val(product.weight || "");
+    $("#color").val(product.color || "");
+    
+    editingIndex = index;
+    
+    // Update button text and style
+    $("#submitBtn").text("Update Product").removeClass("btn-success").addClass("btn-warning");
+    $("#cancelBtn").show();
+    
+    // Scroll to form
+    $("html, body").animate({ scrollTop: $("#productForm").offset().top - 100 }, 500);
+}
+
+// NEW: Cancel editing
+function cancelEdit() {
+    editingIndex = -1;
+    $("#productForm").reset();
+    $("#submitBtn").text("Save Product").removeClass("btn-warning").addClass("btn-success");
+    $("#cancelBtn").hide();
+}
+
+function refreshProductTable() {
+    let output = "";
+    products.forEach((product, index) => {
+        output += `
+            <tr>
+                <td>${product.productId}</td>
+                <td>${product.description}</td>
+                <td>${product.category}</td>
+                <td>${product.unit}</td>
+                <td>$${parseFloat(product.price).toFixed(2)}</td>
+                <td>
+                    <button class="btn btn-success btn-sm me-2" onclick="addToCart(${index})">Add</button>
+                    <button class="btn btn-info btn-sm me-2" onclick="editProduct(${index})">Edit</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteProduct(${index})">Delete</button>
+                </td>
+            </tr>
+        `;
+    });
+    $("#productTable").html(output);
+}
+
+// NEW: Delete product
+function deleteProduct(index) {
+    if (confirm("Are you sure you want to delete this product?")) {
+        products.splice(index, 1);
+        saveProductsToStorage();
+        refreshProductTable();
+        alert("Product deleted!");
+    }
+}
+
+function attachAddButtons() {
+    $("#productTable tr").each(function (index) {
+        $(this).find("button").click(function () {
+            addToCart(index);
+        });
+    });
+}
+
+/* ---------------------------
+   SEARCH FILTER
+---------------------------- */
+
+$("#searchInput").on("keyup", function () {
+    let value = $(this).val().toLowerCase();
+
+    $("#productTable tr").filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+    });
+});
+
+/* ---------------------------
+   ADD PRODUCT FORM
+---------------------------- */
+
+$("#productForm").submit(function (e) {
+    e.preventDefault();
+
+    let productId = $("#productId").val();
+    let description = $("#description").val();
+    let category = $("#category").val();
+    let unit = $("#unit").val();
+    let price = $("#price").val();
+    let weight = $("#weight").val();
+    let color = $("#color").val();
+
+    if (!productId || !description || !category || !unit || !price) {
+        alert("Please fill in all required fields!");
+        return;
+    }
+
+    if (price <= 0) {
+        alert("Price must be greater than 0!");
+        return;
+    }
+
+    // NEW: Check for duplicate Product IDs when adding (but not when updating)
+    if (editingIndex === -1) {
+        if (products.some(p => p.productId === productId)) {
+            alert("A product with this ID already exists!");
+            return;
+        }
+    }
+
+    let newProduct = {
+        productId,
+        description,
+        category,
+        unit,
+        price: parseFloat(price),
+        weight,
+        color
+    };
+
+    if (editingIndex === -1) {
+        // NEW PRODUCT
+        products.push(newProduct);
+        alert("Product added successfully!");
+    } else {
+        // UPDATE EXISTING PRODUCT
+        products[editingIndex] = newProduct;
+        alert("Product updated successfully!");
+        cancelEdit();
+    }
+
+    saveProductsToStorage();
+    refreshProductTable();
+    $("#jsonPreview").text(JSON.stringify(newProduct, null, 2));
+    this.reset();
+});
+
+/* ---------------------------
+   SEND CART TO API
+---------------------------- */
+
+function sendCartData() {
+    $.ajax({
+        url: "https://example.com/api/cart",
+        method: "POST",
+        data: JSON.stringify(cart),
+        contentType: "application/json",
+        success: function () {
+            alert("Cart sent successfully!");
+        },
+        error: function () {
+            alert("Error sending cart.");
+        }
+    });
+}
+
+$(".hidden-section button").click(function () {
+    sendCartData();
+});
+
+/* ---------------------------
+   INITIALIZATION
+---------------------------- */
+
+$(document).ready(function () {
+    loadProductsFromStorage();
+    loadCartFromStorage();
+
+    if (products.length === 0) {
+        loadProductsFromTable();
+        saveProductsToStorage();
+    }
+
+    refreshProductTable();
+    attachAddButtons();
+});
