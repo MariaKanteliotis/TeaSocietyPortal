@@ -1,4 +1,122 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tea Society Storefront</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        /* ✅ Page colors */
+        body {
+            background-color: #355c4a;
+        }
+
+        .custom-navbar {
+            background-color: #2f3e2f;
+        }
+
+        /* Optional: improve contrast */
+        .custom-navbar .nav-link,
+        .custom-navbar .navbar-brand {
+            color: #ffffff !important;
+        }
+
+        .custom-navbar .nav-link.active {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        .hidden-section {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg custom-navbar">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="index.html">Tea Society</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="signup.html">Member Registration</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="content-management.html">Events</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="shopping-cart.html">Store Front</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="finalization.html">Event Finalization</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="order-history.html">Order History</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<header class="hero-section small-hero">
+    <div class="container text-center text-white">
+        <img src="https://cdn.pixabay.com/photo/2020/04/01/17/02/cup-4991876_1280.png" alt="tea" style="float:left;width:150px;height:100px;">
+        <img src="https://png.pngtree.com/png-vector/20230728/ourmid/pngtree-sweater-clipart-cartoon-pattern-of-a-sweater-with-blue-color-vector-png-image_6819091.png" alt="sweater" style="float:right;padding-bottom:50px;width:200px;height:200px;">
+        <h1 class="fw-bold">Tea Society Storefront</h1>
+        <p class="lead mt-3">Browse, search, and manage products for the Tea Society store.</p>
+    </div>
+</header>
+
+<main class="container my-5">
+
+    <div class="card custom-card p-4 mb-5">
+        <h2>Search Products</h2>
+        <input type="text" class="form-control" placeholder="Search products...">
+    </div>
+
+    <div class="card custom-card p-4 mb-5">
+        <h2>Add or Update Product</h2>
+
+        <form class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Product ID *</label>
+                <input type="text" class="form-control" required>
+            </div>
+
+            <div class="col-md-8">
+                <label class="form-label">Description *</label>
+                <input type="text" class="form-control" required>
+            </div>
+
+            <div class="col-12 mt-3">
+                <button class="btn btn-success">Save Product</button>
+                <button class="btn btn-secondary">Clear</button>
+            </div>
+        </form>
+    </div>
+
+</main>
+
+<footer class="text-center py-3 custom-footer text-white">
+    <p class="mb-0">&copy; 2026 Tea Society</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html><!DOCTYPE html> 
 
 <html lang="en"> 
 
