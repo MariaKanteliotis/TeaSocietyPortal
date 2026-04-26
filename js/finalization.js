@@ -4,21 +4,28 @@ $(document).ready(function () {
         e.preventDefault();
 
         const data = {
-            name: $("input[type='text']").val(),
-            email: $("input[type='email']").val(),
-            event: $("select").eq(0).val(),
-            type: $("select").eq(1).val(),
-            comments: $("textarea").val()
+            fullName: $("input[name='fullName']").val(),
+            email: $("input[name='email']").val(),
+            event: $("select[name='event']").val(),
+            participation: $("select[name='participation']").val(),
+            comments: $("textarea[name='comments']").val()
         };
 
         $.ajax({
-            url: "http://localhost:3000/orders",
+            url: "https://tea-society-backend.onrender.com/api/orders",
             method: "POST",
             contentType: "application/json",
             data: JSON.stringify(data),
-            success: function () {
-                alert("Submitted!");
+
+            success: function (response) {
+                alert("Submitted successfully!");
+                console.log(response);
                 $("#finalizationForm")[0].reset();
+            },
+
+            error: function (err) {
+                console.error(err);
+                alert("Error submitting. Check backend connection.");
             }
         });
     });
