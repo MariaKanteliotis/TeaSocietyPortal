@@ -202,3 +202,19 @@ form .form-select:focus {
     color: #355c4a;
     font-weight: 700;
 }
+custom-green-btn {
+    background: linear-gradient(135deg, #5f9f6f, #4c8a5c);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 16px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+.custom-green-btn:hover {
+    background: linear-gradient(135deg, #4c8a5c, #3d744c);
+    transform: translateY(-2px);
+}
