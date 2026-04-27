@@ -21,14 +21,14 @@ function FinalizationApp() {
     function handleSubmit(e) {
         e.preventDefault();
 
-        // Simple validation
+        // Validation
         if (!formData.fullName || !formData.email || !formData.event || !formData.participation) {
             setMessage("Please fill in all required fields");
             return;
         }
 
-        // Send to YOUR Node.js backend
-        fetch("http://localhost:3000/api/orders", {
+    
+        fetch("https://tea-society-backend.onrender.com/api/orders", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -39,6 +39,15 @@ function FinalizationApp() {
         .then(data => {
             setMessage("Submitted successfully!");
             console.log(data);
+
+            // Reset form
+            setFormData({
+                fullName: "",
+                email: "",
+                event: "",
+                participation: "",
+                comments: ""
+            });
         })
         .catch(err => {
             setMessage("Error submitting");
@@ -47,9 +56,7 @@ function FinalizationApp() {
     }
 
     return (
-        <div className="card custom-card p-4">
-            <h2>Finalization Form (React)</h2>
-
+        <div>
             <form onSubmit={handleSubmit}>
 
                 <input
@@ -57,6 +64,7 @@ function FinalizationApp() {
                     name="fullName"
                     placeholder="Full Name"
                     className="form-control mb-3"
+                    value={formData.fullName}
                     onChange={handleChange}
                 />
 
@@ -65,12 +73,14 @@ function FinalizationApp() {
                     name="email"
                     placeholder="Email"
                     className="form-control mb-3"
+                    value={formData.email}
                     onChange={handleChange}
                 />
 
                 <select
                     name="event"
                     className="form-select mb-3"
+                    value={formData.event}
                     onChange={handleChange}
                 >
                     <option value="">Select Event</option>
@@ -82,6 +92,7 @@ function FinalizationApp() {
                 <select
                     name="participation"
                     className="form-select mb-3"
+                    value={formData.participation}
                     onChange={handleChange}
                 >
                     <option value="">Participation Type</option>
@@ -93,6 +104,7 @@ function FinalizationApp() {
                     name="comments"
                     placeholder="Comments"
                     className="form-control mb-3"
+                    value={formData.comments}
                     onChange={handleChange}
                 />
 
