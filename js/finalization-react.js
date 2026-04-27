@@ -123,4 +123,9 @@ function FinalizationApp() {
                 </button>
             </form>
 
-            <p className="mt-3">{message
+            <p className="mt-3">{message}</p>
+        </div>
+    );
+}
+
+ReactDOM.createRoot(document.getElementById("react-root")).render(<FinalizationApp />);
