@@ -3,63 +3,72 @@ const cors = require("cors");
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: "https://mariakanteliotis.github.io"
+}));
+
 app.use(express.json());
 
+// -----------------------------
+let orders = [];
+let idCounter = 1;
 
-const FILE = 'orders.json';
+// -----------------------------
+// GET all orders
+app.get("/api/orders", (req, res) => {
+    const status = req.query.status;
 
+    if (status) {
+        const filtered = orders.filter(o => o.status === status);
+        return res.json(filtered);
+    }
 
-function readOrders() {
-    if (!fs.existsSync(FILE)) return [];
-    return JSON.parse(fs.readFileSync(FILE));
-}
+    res.json(orders);
+});
 
-function writeOrders(data) {
-    fs.writeFileSync(FILE, JSON.stringify(data, null, 2));
-}
-
-app.post('/orders', (req, res) => {
-    const orders = readOrders();
-
+// -----------------------------
+// CREATE order
+app.post("/api/orders", (req, res) => {
     const newOrder = {
-        id: Date.now(),
-        ...req.body,
+        orderId: idCounter++,
+        fullName: req.body.fullName,
+        email: req.body.email,
+        event: req.body.event,
+        participation: req.body.participation,
+        comments: req.body.comments,
         status: "pending"
     };
 
     orders.push(newOrder);
-    writeOrders(orders);
-
     res.json(newOrder);
 });
 
-app.get('/orders', (req, res) => {
-    res.json(readOrders());
+// -----------------------------
+// APPROVE order
+app.put("/api/orders/:id/approve", (req, res) => {
+    const id = parseInt(req.params.id);
+
+    const order = orders.find(o => o.orderId === id);
+    if (!order) return res.status(404).json({ error: "Not found" });
+
+    order.status = "approved";
+    res.json(order);
 });
 
-app.put('/orders/:id/approve', (req, res) => {
-    let orders = readOrders();
+// -----------------------------
+// DECLINE order
+app.put("/api/orders/:id/decline", (req, res) => {
+    const id = parseInt(req.params.id);
 
-    orders = orders.map(o => {
-        if (o.id == req.params.id) o.status = "approved";
-        return o;
-    });
+    const order = orders.find(o => o.orderId === id);
+    if (!order) return res.status(404).json({ error: "Not found" });
 
-    writeOrders(orders);
-    res.json({ message: "Approved" });
+    order.status = "declined";
+    res.json(order);
 });
 
-app.put('/orders/:id/decline', (req, res) => {
-    let orders = readOrders();
-
-    orders = orders.map(o => {
-        if (o.id == req.params.id) o.status = "declined";
-        return o;
-    });
-
-    writeOrders(orders);
-    res.json({ message: "Declined" });
+// -----------------------------
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
-
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
