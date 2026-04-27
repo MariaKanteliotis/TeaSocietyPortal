@@ -2,7 +2,7 @@ let products = [];
 let cart = [];
 
 /* ---------------------------
-   JSON STORAGE FUNCTIONS
+   STORAGE FUNCTIONS
 ---------------------------- */
 
 function saveProductsToStorage() {
@@ -10,7 +10,7 @@ function saveProductsToStorage() {
 }
 
 function loadProductsFromStorage() {
-    let stored = localStorage.getItem("products");
+    const stored = localStorage.getItem("products");
     if (stored) products = JSON.parse(stored);
 }
 
@@ -19,59 +19,35 @@ function saveCartToStorage() {
 }
 
 function loadCartFromStorage() {
-    let stored = localStorage.getItem("cart");
-    if (stored) {
-        cart = JSON.parse(stored);
-        displayCart();
-    }
+    const stored = localStorage.getItem("cart");
+    if (stored) cart = JSON.parse(stored);
 }
 
 /* ---------------------------
-   EXPORT JSON FUNCTIONS
----------------------------- */
-
-function exportProductsJSON() {
-    const dataStr = JSON.stringify(products, null, 2);
-    const blob = new Blob([dataStr], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "products.json";
-    a.click();
-
-    URL.revokeObjectURL(url);
-}
-
-function exportCartJSON() {
-    const dataStr = JSON.stringify(cart, null, 2);
-    const blob = new Blob([dataStr], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "cart.json";
-    a.click();
-
-    URL.revokeObjectURL(url);
-}
-
-/* ---------------------------
-   PRODUCT + CART FUNCTIONS
+   LOAD PRODUCTS FROM TABLE
 ---------------------------- */
 
 function loadProductsFromTable() {
+    products = []; // 🔥 reset so no duplicates
+
     $("#productTable tr").each(function () {
-        let product = {
+        const product = {
             productId: $(this).find("td:eq(0)").text(),
             description: $(this).find("td:eq(1)").text(),
             category: $(this).find("td:eq(2)").text(),
             unit: $(this).find("td:eq(3)").text(),
             price: parseFloat($(this).find("td:eq(4)").text().replace("$", ""))
         };
+
         products.push(product);
     });
+
+    saveProductsToStorage();
 }
+
+/* ---------------------------
+   DISPLAY CART
+---------------------------- */
 
 function displayCart() {
     let output = "";
@@ -88,7 +64,7 @@ function displayCart() {
                     <td>${item.unit}</td>
                     <td>$${item.price.toFixed(2)}</td>
                     <td>
-                        <button class="btn btn-danger btn-sm" onclick="removeFromCart(${index})">
+                        <button class="btn btn-danger btn-sm remove-btn" data-index="${index}">
                             Remove
                         </button>
                     </td>
@@ -100,35 +76,44 @@ function displayCart() {
     $("#cartTable").html(output);
 }
 
+/* ---------------------------
+   ADD TO CART (FIXED)
+---------------------------- */
+
 function addToCart(index) {
     cart.push(products[index]);
     saveCartToStorage();
     displayCart();
 }
 
-function removeFromCart(index) {
+/* ---------------------------
+   REMOVE FROM CART (FIXED)
+---------------------------- */
+
+$(document).on("click", ".remove-btn", function () {
+    const index = $(this).data("index");
     cart.splice(index, 1);
     saveCartToStorage();
     displayCart();
-}
+});
 
-function attachAddButtons() {
-    $("#productTable tr").each(function (index) {
-        $(this).find("button").click(function () {
-            addToCart(index);
-        });
-    });
-}
+/* ---------------------------
+---------------------------- */
+
+$(document).on("click", "#productTable button", function () {
+    const rowIndex = $(this).closest("tr").index();
+    addToCart(rowIndex);
+});
 
 /* ---------------------------
    SEARCH FILTER
 ---------------------------- */
 
 $("#searchInput").on("keyup", function () {
-    let value = $(this).val().toLowerCase();
+    const value = $(this).val().toLowerCase();
 
     $("#productTable tr").filter(function () {
-        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        $(this).toggle($(this).text().toLowerCase().includes(value));
     });
 });
 
@@ -139,13 +124,11 @@ $("#searchInput").on("keyup", function () {
 $("#productForm").submit(function (e) {
     e.preventDefault();
 
-    let productId = $("#productId").val();
-    let description = $("#description").val();
-    let category = $("#category").val();
-    let unit = $("#unit").val();
-    let price = $("#price").val();
-    let weight = $("#weight").val();
-    let color = $("#color").val();
+    const productId = $("#productId").val();
+    const description = $("#description").val();
+    const category = $("#category").val();
+    const unit = $("#unit").val();
+    const price = $("#price").val();
 
     if (!productId || !description || !category || !unit || !price) {
         alert("Please fill in all required fields!");
@@ -157,14 +140,12 @@ $("#productForm").submit(function (e) {
         return;
     }
 
-    let newProduct = {
+    const newProduct = {
         productId,
         description,
         category,
         unit,
-        price: parseFloat(price),
-        weight,
-        color
+        price: parseFloat(price)
     };
 
     products.push(newProduct);
@@ -181,36 +162,8 @@ $("#productForm").submit(function (e) {
         </tr>
     `);
 
-    attachAddButtons();
-
-    $("#jsonPreview").text(JSON.stringify(newProduct, null, 2));
-
     alert("Product added successfully!");
-
     this.reset();
-});
-
-/* ---------------------------
-   SEND CART TO API
----------------------------- */
-
-function sendCartData() {
-    $.ajax({
-        url: "https://example.com/api/cart",
-        method: "POST",
-        data: JSON.stringify(cart),
-        contentType: "application/json",
-        success: function () {
-            alert("Cart sent successfully!");
-        },
-        error: function () {
-            alert("Error sending cart.");
-        }
-    });
-}
-
-$(".hidden-section button").click(function () {
-    sendCartData();
 });
 
 /* ---------------------------
@@ -219,12 +172,11 @@ $(".hidden-section button").click(function () {
 
 $(document).ready(function () {
     loadProductsFromStorage();
-    loadCartFromStorage();
 
     if (products.length === 0) {
         loadProductsFromTable();
-        saveProductsToStorage();
     }
 
-    attachAddButtons();
+    loadCartFromStorage();
+    displayCart();
 });
