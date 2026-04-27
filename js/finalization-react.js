@@ -1,6 +1,8 @@
-const { useState } = React;
+const { useState, useEffect } = React;
 
 function FinalizationApp() {
+    const [cart, setCart] = useState([]);
+
     const [formData, setFormData] = useState({
         fullName: "",
         email: "",
@@ -11,6 +13,11 @@ function FinalizationApp() {
 
     const [message, setMessage] = useState("");
 
+    useEffect(() => {
+        const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+        setCart(storedCart);
+    }, []);
+
     function handleChange(e) {
         setFormData({
             ...formData,
@@ -18,29 +25,39 @@ function FinalizationApp() {
         });
     }
 
+    function getTotal() {
+        return cart.reduce((sum, item) => sum + item.price, 0);
+    }
+
     function handleSubmit(e) {
         e.preventDefault();
 
-        // Validation
-        if (!formData.fullName || !formData.email || !formData.event || !formData.participation) {
-            setMessage("Please fill in all required fields");
+        if (!formData.fullName || !formData.email) {
+            setMessage("Please complete required fields.");
             return;
         }
 
-    
+        const orderData = {
+            customer: formData,
+            items: cart,
+            total: getTotal()
+        };
+
         fetch("https://tea-society-backend.onrender.com/api/orders", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(formData)
+            body: JSON.stringify(orderData)
         })
         .then(res => res.json())
         .then(data => {
-            setMessage("Submitted successfully!");
-            console.log(data);
+            setMessage("Order finalized successfully!");
 
-            // Reset form
+            localStorage.removeItem("cart");
+
+            setCart([]);
+
             setFormData({
                 fullName: "",
                 email: "",
@@ -50,15 +67,31 @@ function FinalizationApp() {
             });
         })
         .catch(err => {
-            setMessage("Error submitting");
-            console.error(err);
+            setMessage("Error submitting order.");
         });
     }
 
     return (
         <div>
-            <form onSubmit={handleSubmit}>
+            <h4 className="mb-3">Cart Items</h4>
 
+            {cart.length === 0 ? (
+                <p>No items in cart.</p>
+            ) : (
+                <ul className="list-group mb-4">
+                    {cart.map((item, index) => (
+                        <li key={index} className="list-group-item d-flex justify-content-between">
+                            {item.description}
+                            <span>${item.price.toFixed(2)}</span>
+                        </li>
+                    ))}
+                    <li className="list-group-item fw-bold">
+                        Total: ${getTotal().toFixed(2)}
+                    </li>
+                </ul>
+            )}
+
+            <form onSubmit={handleSubmit}>
                 <input
                     type="text"
                     name="fullName"
@@ -77,29 +110,6 @@ function FinalizationApp() {
                     onChange={handleChange}
                 />
 
-                <select
-                    name="event"
-                    className="form-select mb-3"
-                    value={formData.event}
-                    onChange={handleChange}
-                >
-                    <option value="">Select Event</option>
-                    <option>Spring Tea Tasting</option>
-                    <option>Matcha Workshop</option>
-                    <option>Tea Social</option>
-                </select>
-
-                <select
-                    name="participation"
-                    className="form-select mb-3"
-                    value={formData.participation}
-                    onChange={handleChange}
-                >
-                    <option value="">Participation Type</option>
-                    <option>In-Person</option>
-                    <option>Virtual</option>
-                </select>
-
                 <textarea
                     name="comments"
                     placeholder="Comments"
@@ -108,13 +118,9 @@ function FinalizationApp() {
                     onChange={handleChange}
                 />
 
-                <button className="btn btn-success">Submit</button>
+                <button className="btn btn-success">
+                    Finalize Order
+                </button>
             </form>
 
-            <p className="mt-3">{message}</p>
-        </div>
-    );
-}
-
-// Render React
-ReactDOM.createRoot(document.getElementById("react-root")).render(<FinalizationApp />);
+            <p className="mt-3">{message
