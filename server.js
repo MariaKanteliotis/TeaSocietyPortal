@@ -3,72 +3,30 @@ const cors = require("cors");
 
 const app = express();
 
-app.use(cors({
-    origin: "https://mariakanteliotis.github.io"
-}));
-
+app.use(cors());
 app.use(express.json());
 
-// -----------------------------
 let orders = [];
-let idCounter = 1;
 
-// -----------------------------
-// GET all orders
+// root test
+app.get("/", (req, res) => {
+    res.send("Backend working");
+});
+
+// GET orders
 app.get("/api/orders", (req, res) => {
-    const status = req.query.status;
-
-    if (status) {
-        const filtered = orders.filter(o => o.status === status);
-        return res.json(filtered);
-    }
-
     res.json(orders);
 });
 
-// -----------------------------
-// CREATE order
+// POST order
 app.post("/api/orders", (req, res) => {
     const newOrder = {
-        orderId: idCounter++,
-        fullName: req.body.fullName,
-        email: req.body.email,
-        event: req.body.event,
-        participation: req.body.participation,
-        comments: req.body.comments,
+        orderId: orders.length + 1,
+        ...req.body,
         status: "pending"
     };
-
     orders.push(newOrder);
     res.json(newOrder);
 });
 
-// -----------------------------
-// APPROVE order
-app.put("/api/orders/:id/approve", (req, res) => {
-    const id = parseInt(req.params.id);
-
-    const order = orders.find(o => o.orderId === id);
-    if (!order) return res.status(404).json({ error: "Not found" });
-
-    order.status = "approved";
-    res.json(order);
-});
-
-// -----------------------------
-// DECLINE order
-app.put("/api/orders/:id/decline", (req, res) => {
-    const id = parseInt(req.params.id);
-
-    const order = orders.find(o => o.orderId === id);
-    if (!order) return res.status(404).json({ error: "Not found" });
-
-    order.status = "declined";
-    res.json(order);
-});
-
-// -----------------------------
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+app.listen(3000, () => console.log("Server running"));
