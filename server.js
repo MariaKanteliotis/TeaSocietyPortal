@@ -4,7 +4,7 @@ const cors = require("cors");
 const app = express();
 
 app.use(cors({
-    origin: "*",
+    origin: "https://mariakanteliotis.github.io",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"]
 }));
@@ -27,24 +27,26 @@ let orders = [];
 
 // ------------------ GET ORDERS ------------------
 app.get("/api/orders", (req, res) => {
-    res.json(orders);
+    res.status(200).json(orders);
 });
 
 // ------------------ CREATE ORDER ------------------
 app.post("/api/orders", (req, res) => {
+    console.log("BODY RECEIVED:", req.body);
+
     const newOrder = {
         orderId: orders.length + 1,
-        fullName: req.body.fullName,
-        email: req.body.email,
-        event: req.body.event,
-        participation: req.body.participation,
-        comments: req.body.comments,
+        fullName: req.body.customer?.fullName || "",
+        email: req.body.customer?.email || "",
+        comments: req.body.customer?.comments || "",
+        items: req.body.items || [],
+        total: req.body.total || 0,
         status: "pending"
     };
 
     orders.push(newOrder);
 
-    console.log("New order added:", newOrder); // debug
+    console.log("New order added:", newOrder);
 
     res.status(201).json(newOrder);
 });
@@ -79,8 +81,13 @@ app.put("/api/orders/:id/decline", (req, res) => {
     res.json(order);
 });
 
-// ------------------ HANDLE PREFLIGHT (VERY IMPORTANT) ------------------
+// ------------------ HANDLE PREFLIGHT ------------------
 app.options("*", cors());
+
+// ------------------ 404 FIX (IMPORTANT) ------------------
+app.use((req, res) => {
+    res.status(404).send("Route not found");
+});
 
 // ------------------ START SERVER ------------------
 const PORT = process.env.PORT || 3000;
