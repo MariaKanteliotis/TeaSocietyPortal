@@ -3,8 +3,19 @@ const cors = require("cors");
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type"]
+}));
+
 app.use(express.json());
+
+// ------------------ DEBUG LOGGING ------------------
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`);
+    next();
+});
 
 // ------------------ TEST ROUTE ------------------
 app.get("/", (req, res) => {
@@ -32,34 +43,48 @@ app.post("/api/orders", (req, res) => {
     };
 
     orders.push(newOrder);
-    res.json(newOrder);
+
+    console.log("New order added:", newOrder); // debug
+
+    res.status(201).json(newOrder);
 });
 
 // ------------------ APPROVE ------------------
 app.put("/api/orders/:id/approve", (req, res) => {
     const id = parseInt(req.params.id);
+
     const order = orders.find(o => o.orderId === id);
 
-    if (!order) return res.status(404).json({ error: "Not found" });
+    if (!order) {
+        return res.status(404).json({ error: "Order not found" });
+    }
 
     order.status = "approved";
+
     res.json(order);
 });
 
 // ------------------ DECLINE ------------------
 app.put("/api/orders/:id/decline", (req, res) => {
     const id = parseInt(req.params.id);
+
     const order = orders.find(o => o.orderId === id);
 
-    if (!order) return res.status(404).json({ error: "Not found" });
+    if (!order) {
+        return res.status(404).json({ error: "Order not found" });
+    }
 
     order.status = "declined";
+
     res.json(order);
 });
+
+// ------------------ HANDLE PREFLIGHT (VERY IMPORTANT) ------------------
+app.options("*", cors());
 
 // ------------------ START SERVER ------------------
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-    console.log("Server running on port " + PORT);
+    console.log(`Server running on port ${PORT}`);
 });
