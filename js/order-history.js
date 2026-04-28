@@ -1,16 +1,20 @@
 $(document).ready(function () {
 
-const API_URL = "https://teasocietyportal.onrender.com/api/orders";
-    
+    const API_URL = "https://teasocietyportal.onrender.com/api/orders";
+
     function loadOrders() {
+        console.log("Fetching from:", API_URL);
+
         $.ajax({
             url: API_URL,
             method: "GET",
             success: function (orders) {
+                console.log("SUCCESS:", orders);
                 displayOrders(orders);
             },
             error: function (err) {
-                console.error(err);
+                console.log("ERROR:", err);
+
                 $("#orderTable").html(
                     "<tr><td colspan='5'>Error loading orders</td></tr>"
                 );
@@ -18,11 +22,12 @@ const API_URL = "https://teasocietyportal.onrender.com/api/orders";
         });
     }
 
+    // DISPLAY FUNCTION
     function displayOrders(orders) {
         const table = $("#orderTable");
         table.empty();
 
-        if (!orders || orders.length === 0) {
+        if (orders.length === 0) {
             table.html("<tr><td colspan='5'>No orders found</td></tr>");
             return;
         }
@@ -41,12 +46,6 @@ const API_URL = "https://teasocietyportal.onrender.com/api/orders";
         });
     }
 
-    $("#search").on("keyup", function () {
-        const value = $(this).val().toLowerCase();
-        $("#orderTable tr").filter(function () {
-            $(this).toggle($(this).text().toLowerCase().includes(value));
-        });
-    });
-
     loadOrders();
+
 });
