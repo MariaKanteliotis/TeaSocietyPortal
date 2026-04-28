@@ -1,12 +1,27 @@
 const express = require("express");
 const cors = require("cors");
+const fs = require("fs");
 
 const app = express();
 
+// ------------------ FILE SETUP ------------------
+const FILE = "orders.json";
+
+// read from JSON file
+function readOrders() {
+    if (!fs.existsSync(FILE)) return [];
+    return JSON.parse(fs.readFileSync(FILE));
+}
+
+// write to JSON file
+function saveOrders(data) {
+    fs.writeFileSync(FILE, JSON.stringify(data, null, 2));
+}
+
 // ------------------ CORS ------------------
 app.use(cors({
-    origin: "https://mariakanteliotis.github.io",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    origin: "*", 
+    methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"]
 }));
 
@@ -23,17 +38,17 @@ app.get("/", (req, res) => {
     res.send("Tea Society Backend is working");
 });
 
-// ------------------ DATA (TEMP STORAGE) ------------------
-let orders = [];
-
 // ------------------ GET ORDERS ------------------
 app.get("/api/orders", (req, res) => {
+    const orders = readOrders();
     console.log("Returning orders:", orders);
     res.json(orders);
 });
 
 // ------------------ CREATE ORDER ------------------
 app.post("/api/orders", (req, res) => {
+    const orders = readOrders();
+
     console.log("BODY RECEIVED:", req.body);
 
     const newOrder = {
@@ -69,6 +84,7 @@ app.post("/api/orders", (req, res) => {
     };
 
     orders.push(newOrder);
+    saveOrders(orders);
 
     console.log("New order added:", newOrder);
 
@@ -77,6 +93,7 @@ app.post("/api/orders", (req, res) => {
 
 // ------------------ APPROVE ORDER ------------------
 app.put("/api/orders/:id/approve", (req, res) => {
+    const orders = readOrders();
     const id = parseInt(req.params.id);
 
     const order = orders.find(o => o.orderId === id);
@@ -86,6 +103,7 @@ app.put("/api/orders/:id/approve", (req, res) => {
     }
 
     order.status = "approved";
+    saveOrders(orders);
 
     console.log("Order approved:", order);
 
@@ -94,6 +112,7 @@ app.put("/api/orders/:id/approve", (req, res) => {
 
 // ------------------ DECLINE ORDER ------------------
 app.put("/api/orders/:id/decline", (req, res) => {
+    const orders = readOrders();
     const id = parseInt(req.params.id);
 
     const order = orders.find(o => o.orderId === id);
@@ -103,6 +122,7 @@ app.put("/api/orders/:id/decline", (req, res) => {
     }
 
     order.status = "declined";
+    saveOrders(orders);
 
     console.log("Order declined:", order);
 
