@@ -19,10 +19,6 @@
       text-align: center;
     }
 
-    h1 {
-      margin: 0;
-    }
-
     .container {
       padding: 30px;
     }
@@ -54,20 +50,9 @@
       background-color: #d7e5dc;
     }
 
-    .approved {
-      color: green;
-      font-weight: bold;
-    }
-
-    .declined {
-      color: red;
-      font-weight: bold;
-    }
-
-    .pending {
-      color: orange;
-      font-weight: bold;
-    }
+    .approved { color: green; font-weight: bold; }
+    .declined { color: red; font-weight: bold; }
+    .pending { color: orange; font-weight: bold; }
   </style>
 </head>
 
@@ -104,14 +89,24 @@
 </div>
 
 <script>
-  const API_URL = "https://tea-society-backend.onrender.com/api/orders";
+  const API_URL = "https://teasocietyportal.onrender.com/api/orders";
 
   let allOrders = [];
 
   async function loadOrders() {
     try {
+      console.log("Fetching:", API_URL);
+
       const res = await fetch(API_URL);
+
+      // ✅ FIX 2: HANDLE 404 / BAD RESPONSE
+      if (!res.ok) {
+        throw new Error("Server error: " + res.status);
+      }
+
       const data = await res.json();
+
+      console.log("Orders received:", data);
 
       allOrders = data;
       displayOrders(data);
@@ -119,14 +114,15 @@
     } catch (err) {
       document.getElementById("ordersTable").innerHTML =
         "<tr><td colspan='5'>Error loading orders</td></tr>";
-      console.error(err);
+
+      console.error("FETCH ERROR:", err);
     }
   }
 
   function displayOrders(orders) {
     const table = document.getElementById("ordersTable");
 
-    if (orders.length === 0) {
+    if (!orders || orders.length === 0) {
       table.innerHTML = "<tr><td colspan='5'>No orders found</td></tr>";
       return;
     }
@@ -136,11 +132,13 @@
     orders.forEach(order => {
       const row = `
         <tr>
-          <td>${order.orderId}</td>
-          <td>${order.fullName}</td>
-          <td>${order.email}</td>
-          <td>${order.event}</td>
-          <td class="${order.status}">${order.status}</td>
+          <td>${order.orderId || ""}</td>
+          <td>${order.fullName || ""}</td>
+          <td>${order.email || ""}</td>
+          <td>${order.event || ""}</td>
+          <td class="${order.status || "pending"}">
+            ${order.status || "pending"}
+          </td>
         </tr>
       `;
       table.innerHTML += row;
@@ -151,9 +149,9 @@
     const value = this.value.toLowerCase();
 
     const filtered = allOrders.filter(order =>
-      order.fullName.toLowerCase().includes(value) ||
-      order.email.toLowerCase().includes(value) ||
-      order.event.toLowerCase().includes(value)
+      (order.fullName || "").toLowerCase().includes(value) ||
+      (order.email || "").toLowerCase().includes(value) ||
+      (order.event || "").toLowerCase().includes(value)
     );
 
     displayOrders(filtered);
