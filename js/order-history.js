@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
-    const API_URL = "https://tea-society-backend.onrender.com/api/orders";
-
+const API_URL = "https://teasocietyportal.onrender.com/api/orders";
+    
     function loadOrders() {
         $.ajax({
             url: API_URL,
