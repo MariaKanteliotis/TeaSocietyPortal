@@ -37,7 +37,6 @@ function FinalizationApp() {
             return;
         }
 
-        // ✅ FIXED: match backend structure
         const orderData = {
             fullName: formData.fullName,
             email: formData.email,
@@ -48,7 +47,7 @@ function FinalizationApp() {
             total: getTotal()
         };
 
-        fetch("https://tea-society-backend.onrender.com/api/orders", {
+        fetch("https://teasocietyportal.onrender.com/api/orders", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
