@@ -37,8 +37,13 @@ function FinalizationApp() {
             return;
         }
 
+        // ✅ FIXED: match backend structure
         const orderData = {
-            customer: formData,
+            fullName: formData.fullName,
+            email: formData.email,
+            event: formData.event,
+            participation: formData.participation,
+            comments: formData.comments,
             items: cart,
             total: getTotal()
         };
@@ -50,14 +55,20 @@ function FinalizationApp() {
             },
             body: JSON.stringify(orderData)
         })
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) {
+                throw new Error("Server error");
+            }
+            return res.json();
+        })
         .then(data => {
             setMessage("Order finalized successfully!");
 
+            // clear cart
             localStorage.removeItem("cart");
-
             setCart([]);
 
+            // reset form
             setFormData({
                 fullName: "",
                 email: "",
@@ -67,6 +78,7 @@ function FinalizationApp() {
             });
         })
         .catch(err => {
+            console.error(err);
             setMessage("Error submitting order.");
         });
     }
@@ -109,6 +121,29 @@ function FinalizationApp() {
                     value={formData.email}
                     onChange={handleChange}
                 />
+
+                <select
+                    name="event"
+                    className="form-select mb-3"
+                    value={formData.event}
+                    onChange={handleChange}
+                >
+                    <option value="">Select Event</option>
+                    <option>Spring Tea Tasting</option>
+                    <option>Matcha Workshop</option>
+                    <option>Tea Social</option>
+                </select>
+
+                <select
+                    name="participation"
+                    className="form-select mb-3"
+                    value={formData.participation}
+                    onChange={handleChange}
+                >
+                    <option value="">Participation Type</option>
+                    <option>In-Person</option>
+                    <option>Virtual</option>
+                </select>
 
                 <textarea
                     name="comments"
