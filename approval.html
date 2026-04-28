@@ -68,14 +68,14 @@
 </div>
 
 <script>
+
 const API_URL = "https://teasocietyportal.onrender.com/api/orders";
 
-// Load only pending orders
 async function loadOrders() {
   try {
     const res = await fetch(API_URL);
 
-    if (!res.ok) throw new Error("Failed to fetch");
+    if (!res.ok) throw new Error("Server error");
 
     const orders = await res.json();
 
@@ -90,12 +90,11 @@ async function loadOrders() {
   }
 }
 
-// Display pending orders
 function displayOrders(orders) {
   const container = document.getElementById("ordersContainer");
 
   if (orders.length === 0) {
-    container.innerHTML = "<p>No pending orders</p>";
+    container.innerHTML = "<p>No pending orders 🎉</p>";
     return;
   }
 
@@ -104,12 +103,12 @@ function displayOrders(orders) {
   orders.forEach(order => {
     const card = document.createElement("div");
     card.className = "card";
+    card.id = "order-" + order.orderId;
 
     card.innerHTML = `
-      <h3>${order.fullName}</h3>
-      <p><strong>Email:</strong> ${order.email}</p>
-      <p><strong>Event:</strong> ${order.event}</p>
-      <p><strong>Status:</strong> ${order.status}</p>
+      <h3>${order.fullName || "No Name"}</h3>
+      <p><strong>Email:</strong> ${order.email || "N/A"}</p>
+      <p><strong>Event:</strong> ${order.event || "N/A"}</p>
 
       <div class="buttons">
         <button class="approve" onclick="approveOrder(${order.orderId})">
@@ -125,26 +124,43 @@ function displayOrders(orders) {
   });
 }
 
-// Approve
 async function approveOrder(id) {
-  await fetch(`${API_URL}/${id}/approve`, {
-    method: "PUT"
-  });
+  try {
+    const res = await fetch(`${API_URL}/${id}/approve`, {
+      method: "PUT"
+    });
 
-  loadOrders(); // reload
+    if (!res.ok) throw new Error("Approve failed");
+
+    // remove from UI instantly
+    document.getElementById("order-" + id).remove();
+
+  } catch (err) {
+    alert("Error approving order");
+    console.error(err);
+  }
 }
 
-// Decline
 async function declineOrder(id) {
-  await fetch(`${API_URL}/${id}/decline`, {
-    method: "PUT"
-  });
+  try {
+    const res = await fetch(`${API_URL}/${id}/decline`, {
+      method: "PUT"
+    });
 
-  loadOrders(); // reload
+    if (!res.ok) throw new Error("Decline failed");
+
+    // remove from UI instantly
+    document.getElementById("order-" + id).remove();
+
+  } catch (err) {
+    alert("Error declining order");
+    console.error(err);
+  }
 }
 
-// Run on page load
+// Load on page start
 loadOrders();
+
 </script>
 
 </body>
