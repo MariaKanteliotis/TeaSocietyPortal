@@ -1,152 +1,256 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Order History - Tea Society</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order History - Tea Society</title>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">  
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+/* Backup styling if external css doesn't load */
+body {
+    background: #355c4a;
+    color: white;
+    font-family: Arial, sans-serif;
+    margin: 0;
+}
+
+header {
+    text-align: center;
+    padding: 30px 15px;
+}
+
+header h1 {
+    font-weight: bold;
+}
+
+.container-box {
+    background: white;
+    color: black;
+    max-width: 1100px;
+    margin: auto;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.15);
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: #2f3e2f;
+    color: white;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+tr:nth-child(even) {
+    background: #f4f4f4;
+}
+
+.Pending {
+    color: orange;
+    font-weight: bold;
+}
+
+.Approved {
+    color: green;
+    font-weight: bold;
+}
+
+.Rejected {
+    color: red;
+    font-weight: bold;
+}
+
+.footer-links {
+    text-align: center;
+    margin: 25px 0;
+}
+
+.footer-links a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+</style>
 </head>
 
 <body>
-   <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="index.html">Tea Society</a>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark custom-navbar" style="background:#2f3e2f;">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="index.html">Tea Society</a>
 
-            <div class="collapse navbar-collapse" id="mainNav">
-           <ul class="navbar-nav ms-auto">
-    <li class="nav-item">
-        <a class="nav-link active" href="index.html">Home</a>
-    </li>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <li class="nav-item">
-        <a class="nav-link" href="signup.html">Member Registration</a>
-    </li>
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav ms-auto">
 
-    <li class="nav-item">
-        <a class="nav-link" href="content-management.html">Events</a>
-    </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
 
-    <li class="nav-item">
-        <a class="nav-link" href="shopping-cart.html">Store Front</a>
-    </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="signup.html">Member Registration</a>
+                </li>
 
-    <li class="nav-item">
-        <a class="nav-link" href="finalization.html">Event Finalization</a>
-    </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="content-management.html">Events</a>
+                </li>
 
-    <li class="nav-item">
-        <a class="nav-link" href="order-history.html">Order History</a>
-    </li>    
-</ul>
-            </div>
+                <li class="nav-item">
+                    <a class="nav-link" href="shopping-cart.html">Store Front</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="finalization.html">Event Finalization</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link active" href="order-history.html">Order History</a>
+                </li>
+
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
 
+<!-- HEADER -->
 <header>
-  <h1>Order History</h1>
-  <p>View your event registrations and status</p>
+    <h1>Order History</h1>
+    <p>View your event registrations and status</p>
 </header>
 
-<div class="container">
+<!-- CONTENT -->
+<div class="container-box">
 
-  <input 
-    type="text" 
-    id="searchInput" 
-    placeholder="Search orders..."
-  />
+    <input type="text" id="searchInput" placeholder="Search by name, email, or event...">
 
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Event</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody id="ordersTable">
-      <tr><td colspan="5">Loading...</td></tr>
-    </tbody>
-  </table>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Event</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody id="ordersTable">
+                <tr>
+                    <td colspan="5">Loading...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
 </div>
 
-  <div style="text-align:center; margin: 20px;">
-  <a href="index.html">Home</a> |
-  <a href="approval.html">Admin Approval</a>
+<!-- FOOTER LINKS -->
+<div class="footer-links">
+    <a href="index.html">Home</a> |
+    <a href="approval.html">Admin Approval</a>
 </div>
 
-  
+<!-- SCRIPT -->
 <script>
-  const API_URL = "https://teasocietyportal.onrender.com/api/orders";
+const API_URL = "https://teasocietyportal.onrender.com/api/orders";
+let allOrders = [];
 
-  let allOrders = [];
+async function loadOrders() {
+    const table = document.getElementById("ordersTable");
 
-  async function loadOrders() {
     try {
-      const res = await fetch(API_URL);
+        const res = await fetch(API_URL);
 
-      if (!res.ok) throw new Error("API not working");
+        if (!res.ok) throw new Error("Failed to load");
 
-      const data = await res.json();
+        const data = await res.json();
 
-      allOrders = data;
-      displayOrders(data);
+        allOrders = data;
+        displayOrders(data);
 
-    } catch (err) {
-      document.getElementById("ordersTable").innerHTML =
-        "<tr><td colspan='5'>Error loading orders</td></tr>";
-      console.error(err);
+    } catch (error) {
+        table.innerHTML = `
+            <tr>
+                <td colspan="5">Unable to load order history</td>
+            </tr>
+        `;
+        console.error(error);
     }
-  }
+}
 
-  function displayOrders(orders) {
+function displayOrders(orders) {
     const table = document.getElementById("ordersTable");
 
     if (orders.length === 0) {
-      table.innerHTML = "<tr><td colspan='5'>No orders found</td></tr>";
-      return;
+        table.innerHTML = `
+            <tr>
+                <td colspan="5">No orders found</td>
+            </tr>
+        `;
+        return;
     }
 
     table.innerHTML = "";
 
     orders.forEach(order => {
-      const row = `
-        <tr>
-          <td>${order.orderId}</td>
-          <td>${order.fullName || "N/A"}</td>
-          <td>${order.email || "N/A"}</td>
-          <td>${order.event || "N/A"}</td>
-          <td class="${order.status}">${order.status}</td>
-        </tr>
-      `;
-      table.innerHTML += row;
+        table.innerHTML += `
+            <tr>
+                <td>${order.orderId || "N/A"}</td>
+                <td>${order.fullName || "N/A"}</td>
+                <td>${order.email || "N/A"}</td>
+                <td>${order.event || "N/A"}</td>
+                <td class="${order.status || ''}">
+                    ${order.status || "Pending"}
+                </td>
+            </tr>
+        `;
     });
-  }
+}
 
-  document.getElementById("searchInput").addEventListener("input", function() {
-    const value = this.value.toLowerCase();
+document.getElementById("searchInput").addEventListener("input", function () {
+    const search = this.value.toLowerCase();
 
     const filtered = allOrders.filter(order =>
-      (order.fullName || "").toLowerCase().includes(value) ||
-      (order.email || "").toLowerCase().includes(value) ||
-      (order.event || "").toLowerCase().includes(value)
+        (order.fullName || "").toLowerCase().includes(search) ||
+        (order.email || "").toLowerCase().includes(search) ||
+        (order.event || "").toLowerCase().includes(search)
     );
 
     displayOrders(filtered);
-  });
+});
 
-  loadOrders();
+loadOrders();
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
-
- 
