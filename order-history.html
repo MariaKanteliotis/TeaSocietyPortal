@@ -5,101 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Order History - Tea Society</title>
 
+<!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Your CSS File -->
 <link rel="stylesheet" href="css/style.css">
-
-<style>
-/* Backup styling if external css doesn't load */
-body {
-    background: #355c4a;
-    color: white;
-    font-family: Arial, sans-serif;
-    margin: 0;
-}
-
-header {
-    text-align: center;
-    padding: 30px 15px;
-}
-
-header h1 {
-    font-weight: bold;
-}
-
-.container-box {
-    background: white;
-    color: black;
-    max-width: 1100px;
-    margin: auto;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.15);
-}
-
-input[type="text"] {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-thead {
-    background: #2f3e2f;
-    color: white;
-}
-
-th, td {
-    padding: 12px;
-    border: 1px solid #ddd;
-    text-align: center;
-}
-
-tr:nth-child(even) {
-    background: #f4f4f4;
-}
-
-.Pending {
-    color: orange;
-    font-weight: bold;
-}
-
-.Approved {
-    color: green;
-    font-weight: bold;
-}
-
-.Rejected {
-    color: red;
-    font-weight: bold;
-}
-
-.footer-links {
-    text-align: center;
-    margin: 25px 0;
-}
-
-.footer-links a {
-    color: white;
-    text-decoration: none;
-    margin: 0 10px;
-}
-
-.footer-links a:hover {
-    text-decoration: underline;
-}
-</style>
 </head>
 
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark custom-navbar" style="background:#2f3e2f;">
+<nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
     <div class="container">
         <a class="navbar-brand fw-bold" href="index.html">Tea Society</a>
 
@@ -140,42 +56,54 @@ tr:nth-child(even) {
 </nav>
 
 <!-- HEADER -->
-<header>
-    <h1>Order History</h1>
-    <p>View your event registrations and status</p>
+<header class="text-center py-5">
+    <h1 class="fw-bold">Order History</h1>
+    <p class="lead">View your event registrations and status</p>
 </header>
 
-<!-- CONTENT -->
-<div class="container-box">
+<!-- MAIN CONTENT -->
+<div class="container mb-5">
 
-    <input type="text" id="searchInput" placeholder="Search by name, email, or event...">
+    <!-- SEARCH -->
+    <div class="card shadow p-4 rounded-4">
 
-    <div class="table-responsive">
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Event</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
+        <div class="mb-4">
+            <input 
+                type="text" 
+                id="searchInput" 
+                class="form-control form-control-lg"
+                placeholder="Search by name, email, or event..."
+            >
+        </div>
 
-            <tbody id="ordersTable">
-                <tr>
-                    <td colspan="5">Loading...</td>
-                </tr>
-            </tbody>
-        </table>
+        <!-- TABLE -->
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Event</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody id="ordersTable">
+                    <tr>
+                        <td colspan="5">Loading...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
     </div>
-
 </div>
 
 <!-- FOOTER LINKS -->
-<div class="footer-links">
-    <a href="index.html">Home</a> |
-    <a href="approval.html">Admin Approval</a>
+<div class="text-center pb-4">
+    <a href="index.html" class="btn btn-outline-light me-2">Home</a>
+    <a href="approval.html" class="btn btn-outline-light">Admin Approval</a>
 </div>
 
 <!-- SCRIPT -->
@@ -189,7 +117,7 @@ async function loadOrders() {
     try {
         const res = await fetch(API_URL);
 
-        if (!res.ok) throw new Error("Failed to load");
+        if (!res.ok) throw new Error("API failed");
 
         const data = await res.json();
 
@@ -199,11 +127,19 @@ async function loadOrders() {
     } catch (error) {
         table.innerHTML = `
             <tr>
-                <td colspan="5">Unable to load order history</td>
+                <td colspan="5" class="text-danger fw-bold">
+                    Unable to load orders
+                </td>
             </tr>
         `;
         console.error(error);
     }
+}
+
+function badgeColor(status) {
+    if (status === "Approved") return "success";
+    if (status === "Rejected") return "danger";
+    return "warning";
 }
 
 function displayOrders(orders) {
@@ -227,8 +163,10 @@ function displayOrders(orders) {
                 <td>${order.fullName || "N/A"}</td>
                 <td>${order.email || "N/A"}</td>
                 <td>${order.event || "N/A"}</td>
-                <td class="${order.status || ''}">
-                    ${order.status || "Pending"}
+                <td>
+                    <span class="badge bg-${badgeColor(order.status)} px-3 py-2">
+                        ${order.status || "Pending"}
+                    </span>
                 </td>
             </tr>
         `;
@@ -236,12 +174,12 @@ function displayOrders(orders) {
 }
 
 document.getElementById("searchInput").addEventListener("input", function () {
-    const search = this.value.toLowerCase();
+    const value = this.value.toLowerCase();
 
     const filtered = allOrders.filter(order =>
-        (order.fullName || "").toLowerCase().includes(search) ||
-        (order.email || "").toLowerCase().includes(search) ||
-        (order.event || "").toLowerCase().includes(search)
+        (order.fullName || "").toLowerCase().includes(value) ||
+        (order.email || "").toLowerCase().includes(value) ||
+        (order.event || "").toLowerCase().includes(value)
     );
 
     displayOrders(filtered);
@@ -250,6 +188,7 @@ document.getElementById("searchInput").addEventListener("input", function () {
 loadOrders();
 </script>
 
+<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
